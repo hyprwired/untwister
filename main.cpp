@@ -51,8 +51,7 @@ void Usage(Untwister *untwister)
     for (unsigned int index = 0; index < names.size(); ++index)
     {
         std::cout << "\t\t" << BOLD << " * " << RESET << names[index];
-        if (index == 0)
-        {
+        if (names[index] == "glibc-rand"){
             std::cout << " (default)";
         }
         std::cout << std::endl;

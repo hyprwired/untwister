@@ -2,11 +2,11 @@
 CPPFLAGS = -std=gnu++11 -O3 -g3 -Wall -c -fmessage-length=0 -MMD -fPIC
 PYTHON = /usr/include/python2.7
 BOOST = /usr/include
-OBJS = ./prngs/LSBState.o ./prngs/GlibcRand.o ./prngs/PHP_mt19937.o ./prngs/Mt19937.o ./prngs/Ruby.o ./prngs/Java.o ./prngs/PRNGFactory.o ./Untwister.o
+OBJS = ./prngs/LSBState.o ./prngs/GlibcRand.o ./prngs/PHP_mt19937.o ./prngs/Mt19937.o ./prngs/Ruby.o ./prngs/Java.o ./prngs/PRNGFactory.o ./prngs/DotNetSystemRandom.o ./prngs/LSBStatePHP5_rand.o ./prngs/PHP5_rand.o  ./Untwister.o
 TEST_OBJS = ./tests/runner.o ./tests/TestRuby.o ./tests/TestJava.o ./tests/TestMt19937.o ./tests/TestPRNGFactory.o ./tests/Test_PHP_mt19937.o ./tests/TestUntwister.o
 CC = g++
 
-all: GlibcRand Mt19937 PHP_mt19937 Ruby Java LSBState PRNGFactory Untwister
+all: GlibcRand Mt19937 PHP_mt19937 Ruby Java LSBState PRNGFactory DotNetSystemRandom LSBStatePHP5_rand PHP5_rand Untwister
 	$(CC) $(CPPFLAGS) -pthread -MF"main.d" -MT"main.d" -o "main.o" "./main.cpp"
 	$(CC) -std=gnu++11 -O3 -pthread $(OBJS) main.o -o untwister
 
@@ -44,6 +44,15 @@ LSBState:
 
 PRNGFactory:
 	$(CC) $(CPPFLAGS) -MF"prngs/PRNGFactory.d" -MT"prngs/PRNGFactory.d" -o "prngs/PRNGFactory.o" "./prngs/PRNGFactory.cpp"
+
+DotNetSystemRandom:
+	$(CC) $(CPPFLAGS) -MF"prngs/DotNetSystemRandom.d" -MT"prngs/DotNetSystemRandom.d" -o "prngs/DotNetSystemRandom.o" "./prngs/DotNetSystemRandom.cpp"
+
+LSBStatePHP5_rand:
+	$(CC) $(CPPFLAGS) -MF"prngs/LSBStatePHP5_rand.d" -MT"prngs/LSBStatePHP5_rand.d" -o "prngs/LSBStatePHP5_rand.o" "./prngs/LSBStatePHP5_rand.cpp"
+
+PHP5_rand:
+	$(CC) $(CPPFLAGS) -MF"prngs/PHP5_rand.d" -MT"prngs/PHP5_rand.d" -o "prngs/PHP5_rand.o" "./prngs/PHP5_rand.cpp"
 
 Untwister:
 	$(CC) $(CPPFLAGS) -pthread -MF"Untwister.d" -MT"Untwister.d" -o "Untwister.o" "./Untwister.cpp"

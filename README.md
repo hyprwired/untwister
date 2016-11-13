@@ -6,9 +6,11 @@ Multi-threaded seed recovery tool for common PRNGs.
 
 Supported PRNGs
 =================
+* .NET System.Random Next()
 * Glibc's rand()
 * Mersenne Twister (MT19937)
-* PHP's MT-variant (php_mt_rand)
+* PHP's MT-variant (php-mt_rand)
+* PHP 5's glibc rand (php5-rand)
 * Ruby's MT-variant DEFAULT::rand()
 * Java's Random() class
 
@@ -29,9 +31,11 @@ Untwister - Recover PRNG seeds from observed values.
         Also controls how deep to generate random numbers given the -g option
     -r <rng_alg>
         The RNG algorithm to use. Supported RNG algorithms:
+        dotnet-systemrandom
         glibc-rand (default)
         mt19937
         php-mt_rand
+        php5-rand
         ruby-rand
         java
     -u

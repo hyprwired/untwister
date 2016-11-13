@@ -8,8 +8,10 @@
 #include "Mt19937.h"
 #include "GlibcRand.h"
 #include "Ruby.h"
+#include "PHP5_rand.h"
 #include "PHP_mt19937.h"
 #include "Java.h"
+#include "DotNetSystemRandom.h"
 
 /* Template to bind constructor to mapped string */
 template<typename T> PRNG* create() { return new T; }

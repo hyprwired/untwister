@@ -13,6 +13,7 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 */
 
 #include "PHP_mt19937.h"
@@ -52,7 +53,40 @@ int64_t PHP_mt19937::getSeed()
 
 uint32_t PHP_mt19937::random()
 {
-    return genrand_int32(m_mt) >> 1;
+    int32_t result;
+
+    result = genrand_int32(m_mt) >> 1;
+
+    if (m_isBounded) {
+            /*
+                -----------------------------------------------------------------------------------------
+                Adapted from PHP code located at:
+                    https://github.com/php/php-src/blob/PHP-5.6.27/ext/standard/rand.c
+                    https://github.com/php/php-src/blob/PHP-5.6.27/ext/standard/php_rand.h
+
+                Above PHP code licensed under version 3.01 of the PHP license (http://www.php.net/license/3_01.txt)
+                -----------------------------------------------------------------------------------------
+
+                int mt_rand([int min, int max]) uses RAND_RANGE():
+                    https://github.com/php/php-src/blob/PHP-5.6.27/ext/standard/rand.c#L340
+                    ...
+                    if (argc == 2) {
+                       RAND_RANGE(number, min, max, PHP_MT_RAND_MAX);
+                    }
+                    ...
+
+                RAND_RANGE defined here:
+                https://github.com/php/php-src/blob/PHP-5.6.27/ext/standard/php_rand.h#L44
+                ...
+                #define RAND_RANGE(__n, __min, __max, __tmax) \
+                    (__n) = (__min) + (long) ((double) ( (double) (__max) - (__min) + 1.0) * ((__n) / ((__tmax) + 1.0)))
+                ...
+
+            */
+        result = (uint32_t)((m_minBound) + (int64_t) ((double) ( (double) (m_maxBound) - (m_minBound) + 1.0) * ((result) / ((2147483647) + 1.0))));
+    }
+
+    return result;
 }
 
 void PHP_mt19937::php_mt_initialize(uint32_t seed)
@@ -147,9 +181,10 @@ void PHP_mt19937::setEvidence(std::vector<uint32_t>)
 
 }
 
-void PHP_mt19937::setBounds(uint32_t min, uint32_t max)
-{
-    //TODO add support for this!
+void PHP_mt19937::setBounds(uint32_t min, uint32_t max){
+    m_minBound = min;
+    m_maxBound = max;
+    m_isBounded = true;
 }
 
 int64_t PHP_mt19937::getMinSeed()
